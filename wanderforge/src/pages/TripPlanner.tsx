@@ -273,7 +273,7 @@ export default function TripPlanner() {
   };
 
   // Handle Enter key to advance
-  const handleKeyDown = (stepIndex: number, isValid: boolean) => (e: React.KeyboardEvent) => {
+  const _handleKeyDown = (stepIndex: number, isValid: boolean) => (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && isValid && stepIndex < steps.length - 1) {
       e.preventDefault();
       scrollToStep(stepIndex + 1);
@@ -285,7 +285,7 @@ export default function TripPlanner() {
     if (store.stage !== 'planning') return;
 
     const handleScroll = () => {
-      const scrollY = window.scrollY;
+      const _scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
 
       sectionRefs.current.forEach((section, index) => {

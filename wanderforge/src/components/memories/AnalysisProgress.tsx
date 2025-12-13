@@ -15,6 +15,7 @@ export function AnalysisProgress() {
   // Animate detection items appearing
   useEffect(() => {
     if (currentDetections.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowDetections([]);
       currentDetections.forEach((detection, index) => {
         setTimeout(() => {

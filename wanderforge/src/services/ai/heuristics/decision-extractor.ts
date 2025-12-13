@@ -9,8 +9,8 @@ export function normalizeVoters(raw: string | string[]): string[] {
   }
   const asStr = String(raw).trim();
   // try comma/pipe/slash/and splits
-  if (/[,\|\/]| and /i.test(asStr)) {
-    return Array.from(new Set(asStr.split(/[,|\/]+|\band\b/i).map(s => s.trim()).filter(Boolean)));
+  if (/[,|/]| and /i.test(asStr)) {
+    return Array.from(new Set(asStr.split(/[,|/]+|\band\b/i).map(s => s.trim()).filter(Boolean)));
   }
   // fallback: break on word boundaries and CamelCase heuristics
   const parts = asStr.match(/[A-Z]?[a-z]+|[A-Z]{2,}|[0-9]+/g) || [];

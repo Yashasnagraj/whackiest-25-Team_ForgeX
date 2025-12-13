@@ -52,14 +52,17 @@ export class GroqProvider {
           if (!response.ok) {
             const errorText = await response.text();
             const error = new Error(`Groq API error: ${response.status} - ${errorText}`);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).status = response.status;
 
             // Check for rate limit errors
             if (response.status === 429 || /rate.?limit|quota|too.?many/i.test(errorText)) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (error as any).isRetryable = true;
               // Extract retry-after from headers if present
               const retryAfter = response.headers.get('Retry-After');
               if (retryAfter) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (error as any).retryAfter = parseInt(retryAfter, 10) * 1000;
               }
             }

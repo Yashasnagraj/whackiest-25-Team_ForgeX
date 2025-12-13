@@ -1,7 +1,7 @@
 // Demo Simulator for Safety Sentinel
 // Provides realistic demo data for hackathon judges
 
-import { HAMPI_CENTER, offsetCoordinate, randomOffsetWithinRadius } from './geo-utils';
+import { HAMPI_CENTER, offsetCoordinate } from './geo-utils';
 
 export interface DemoMember {
   id: string;

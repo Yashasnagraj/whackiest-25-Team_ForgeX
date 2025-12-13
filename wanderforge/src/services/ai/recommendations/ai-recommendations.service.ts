@@ -3,7 +3,7 @@
 
 import { LLMProviderManager } from '../providers';
 import { searchPlace } from '../../itinerary/web-search';
-import { searchPlace as geocodePlace, searchPlaceNear } from '../search/nominatim.service';
+import { searchPlace as geocodePlace } from '../search/nominatim.service';
 import type {
   RegionSuggestion,
   PlaceSuggestion,
@@ -11,11 +11,10 @@ import type {
   InterestCategory,
 } from '../../itinerary/direct-input.types';
 import { generatePlaceId } from '../../itinerary/direct-input.types';
-import type { PlaceCategory, Coords } from '../../itinerary/types';
+import type { PlaceCategory } from '../../itinerary/types';
 import {
   getRegionSuggestionsPrompt,
   getPopularPlacesPrompt,
-  getPlaceSearchPrompt,
   getMissedRecommendationsPrompt,
   getPlaceDetailsPrompt,
   getTripSummaryPrompt,
@@ -114,7 +113,8 @@ export async function getPopularPlacesInRegion(
     const response = await llmManager.executeWithFallback(prompt);
 
     if (response.success && response.data?.places) {
-      const places: PlaceSuggestion[] = (response.data.places as any[]).map((p, i) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const places: PlaceSuggestion[] = (response.data.places as any[]).map((p, _i) => ({
         id: generatePlaceId(),
         name: p.name,
         type: mapToPlaceCategory(p.type),
@@ -262,6 +262,7 @@ export async function getMissedRecommendations(
 
     if (response.success && response.data?.recommendations) {
       const recommendations: MissedRecommendation[] = await Promise.all(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (response.data.recommendations as any[]).map(async (r) => {
           const rec: MissedRecommendation = {
             id: generatePlaceId(),
@@ -305,6 +306,7 @@ export async function getMissedRecommendations(
 export async function getPlaceDetails(
   placeName: string,
   region: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any | null> {
   try {
     // Web search for place details

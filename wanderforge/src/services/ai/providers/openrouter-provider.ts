@@ -67,19 +67,23 @@ export class OpenRouterProvider {
             if (!response.ok) {
               const errorText = await response.text();
               const error = new Error(`OpenRouter API error (${model}): ${response.status} - ${errorText}`);
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (error as any).status = response.status;
 
               // Check for rate limit or model-specific errors
               if (response.status === 429 || /rate.?limit|quota|too.?many|capacity/i.test(errorText)) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (error as any).isRetryable = true;
                 const retryAfter = response.headers.get('Retry-After');
                 if (retryAfter) {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (error as any).retryAfter = parseInt(retryAfter, 10) * 1000;
                 }
               }
 
               // Model not available - try next model
               if (response.status === 404 || /model.?not.?found|not.?available/i.test(errorText)) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (error as any).modelUnavailable = true;
               }
 
@@ -122,6 +126,7 @@ export class OpenRouterProvider {
           latencyMs: Date.now() - startTime,
         };
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const err = error as any;
         console.warn(`[OpenRouter] Model ${model} failed: ${err.message}`);
 

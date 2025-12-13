@@ -19,7 +19,7 @@ const MONEY_CONTEXT_SIGNALS = [
 
 // Patterns that look like money but aren't (e.g., dates, times)
 const DATE_LIKE_PATTERNS = [
-  /^\d{1,2}[-\/]\d{1,2}$/,           // 10-13 (date range without k)
+  /^\d{1,2}[-/]\d{1,2}$/,           // 10-13 (date range without k)
   /^\d{1,2}:\d{2}$/,                 // 10:30 (time)
   /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s*\d{1,2}/i, // Dec 10
   /\d{1,2}\s*(am|pm)\b/i,            // 10 am

@@ -1,5 +1,5 @@
 // Itinerary Generator Types
-import type { ExtractedPlace, ExtractedDate, ExtractedBudget } from '../ai/types';
+import type { ExtractedPlace } from '../ai/types';
 
 // Coordinates type
 export interface Coords {

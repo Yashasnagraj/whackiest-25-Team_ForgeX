@@ -1,7 +1,6 @@
 // Fatigue-Aware Scheduler - Balance activity intensity across days
 import type { ExtractedPlace } from '../ai/types';
 import type {
-  PlaceCategory,
   ScheduledActivity,
   DayItinerary,
   FatigueConfig,

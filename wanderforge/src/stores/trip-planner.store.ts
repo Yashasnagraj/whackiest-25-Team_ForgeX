@@ -32,7 +32,6 @@ import {
   adaptDirectInputToItinerary,
   enrichPlacesWithCoordinates,
   validateDirectInput,
-  checkPlaceCoverage,
 } from '../services/itinerary/direct-input.adapter';
 import { generateItineraryWithResearch } from '../services/itinerary/builder';
 

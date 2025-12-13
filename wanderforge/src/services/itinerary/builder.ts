@@ -20,7 +20,7 @@ import {
   TRAVEL_SPEEDS,
   getDefaultTravelMode,
 } from './route-optimizer';
-import { assignTimeSlots, mapToPlaceCategory, DEFAULT_DURATIONS } from './time-optimizer';
+import { assignTimeSlots, mapToPlaceCategory } from './time-optimizer';
 import {
   applyFatigueValues,
   insertRestBreaks,
@@ -35,7 +35,6 @@ import {
 } from './recommendations';
 import { researchPlacesAutoRegion } from './research-pipeline';
 import { generateSmartItinerary } from './smart-builder';
-import { detectRegion } from './place-research';
 
 /**
  * Calculate number of days between two date strings (inclusive)

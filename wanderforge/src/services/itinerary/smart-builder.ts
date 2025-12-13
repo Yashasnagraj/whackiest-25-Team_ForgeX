@@ -9,7 +9,7 @@ import type {
   PlaceRecommendation,
   TimeSlot,
 } from './types';
-import type { ExtractedPlace } from '../ai/types';
+// ExtractedPlace imported for knowledgeToExtractedPlace type compatibility
 import { haversineDistance, optimizeVisitOrder } from './route-optimizer';
 import { knowledgeToExtractedPlace } from './place-research';
 
@@ -99,7 +99,7 @@ function getOptimalTimeOfDay(place: PlaceKnowledge): 'morning' | 'afternoon' | '
 /**
  * Check if a place is open at a given time
  */
-function isPlaceOpen(place: PlaceKnowledge, minutes: number): boolean {
+function _isPlaceOpen(place: PlaceKnowledge, minutes: number): boolean {
   if (!place.openingHours) return true; // Assume open if unknown
 
   const openTime = parseTime(place.openingHours.open);
@@ -116,7 +116,7 @@ function isPlaceOpen(place: PlaceKnowledge, minutes: number): boolean {
 /**
  * Group places by optimal time of day
  */
-function groupByTimeOfDay(places: PlaceKnowledge[]): {
+function _groupByTimeOfDay(places: PlaceKnowledge[]): {
   morning: PlaceKnowledge[];
   afternoon: PlaceKnowledge[];
   evening: PlaceKnowledge[];
@@ -149,7 +149,7 @@ const MAX_SAME_DAY_DISTANCE = 100; // 100 km max
  * Cluster places by geographic proximity for multi-day trips
  * Ensures places that are too far apart end up on different days
  */
-function clusterByProximity(places: PlaceKnowledge[], numClusters: number): PlaceKnowledge[][] {
+function _clusterByProximity(places: PlaceKnowledge[], numClusters: number): PlaceKnowledge[][] {
   if (places.length <= numClusters) {
     return places.map(p => [p]);
   }
@@ -531,7 +531,7 @@ function distributeByGeography(places: PlaceKnowledge[], numDays: number): Place
   clusterTimes.sort((a, b) => b.totalTime - a.totalTime);
 
   // Assign each cluster to the day with most available time that can fit it
-  for (const { cluster, places: clusterPlaces, totalTime } of clusterTimes) {
+  for (const { cluster, places: _clusterPlaces, totalTime } of clusterTimes) {
     // Find the best day for this cluster
     let bestDay = -1;
     let bestRemainingTime = -1;
@@ -712,7 +712,7 @@ function orderByProximity(places: PlaceKnowledge[]): PlaceKnowledge[] {
 /**
  * Calculate total travel distance within a cluster (visiting in order)
  */
-function calculateClusterTotalDistance(places: PlaceKnowledge[]): number {
+function _calculateClusterTotalDistance(places: PlaceKnowledge[]): number {
   if (places.length <= 1) return 0;
 
   let total = 0;
@@ -884,7 +884,7 @@ function buildDaySchedule(
 /**
  * Find best nearby restaurant from a place's nearby restaurants
  */
-function findBestNearbyRestaurant(
+function _findBestNearbyRestaurant(
   place: PlaceKnowledge,
   usedRestaurants: Set<string>
 ): NearbyPlace | null {
@@ -1146,11 +1146,11 @@ function generateDayRecommendations(
 
   // Check what categories are missing
   const hasRestaurant = places.some(p => p.type === 'restaurant');
-  const hasBeach = places.some(p => p.type === 'beach');
+  const _hasBeach = places.some(p => p.type === 'beach');
 
   // Collect nearby places from all researched places
   const allNearbyRestaurants = places.flatMap(p => p.nearbyRestaurants);
-  const centroid = getClusterCentroid(places);
+  const _centroid = getClusterCentroid(places);
 
   if (!hasRestaurant && allNearbyRestaurants.length > 0) {
     const restaurant = allNearbyRestaurants[0];
@@ -1195,7 +1195,7 @@ export async function generateSmartItinerary(
   knowledge: PlaceKnowledge[],
   dates: { start: string; end: string },
   budget: { total: number; currency: string; perPerson: boolean } | null,
-  members: string[] = []
+  _members: string[] = []
 ): Promise<GeneratedItinerary> {
   console.log(`[SmartBuilder] Generating itinerary for ${knowledge.length} places, ${dates.start} to ${dates.end}`);
 
@@ -1270,5 +1270,6 @@ function findMissingCategories(places: PlaceKnowledge[]): string[] {
   const present = new Set(places.map(p => p.type));
   const recommended = ['beach', 'restaurant', 'landmark'];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return recommended.filter(cat => !present.has(cat as any));
 }

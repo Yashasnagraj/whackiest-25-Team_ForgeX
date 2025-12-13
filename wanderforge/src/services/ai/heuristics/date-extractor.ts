@@ -9,7 +9,7 @@ const DATE_PATTERNS = [
   },
   // "15/12/2024" or "15-12-2024"
   {
-    pattern: /\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})\b/g,
+    pattern: /\b(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})\b/g,
     confidence: 75,
   },
   // "15th December" or "December 15th"

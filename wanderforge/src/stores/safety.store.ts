@@ -129,7 +129,7 @@ const initialState = {
 
 export const useSafetyStore = create<SafetyState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       ...initialState,
 
       setPhoneNumber: (phone) => set({ myPhoneNumber: phone }),

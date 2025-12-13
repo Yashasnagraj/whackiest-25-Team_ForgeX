@@ -182,7 +182,8 @@ const REACTION_PATTERNS = [
   /^budget\s+explodes?/i,         // "Budget explodes"
   /^(?:nice|cool|great|awesome|good|bad|okay|ok)$/i, // Simple reactions
   /^(?:bro|dude|man|boss|guru|macha)\b/i,  // Casual address
-  /^[😭😂🤣💀👍👌🔥❤️]+$/,        // Emoji-only
+  // eslint-disable-next-line no-misleading-character-class
+  /^[😭😂🤣💀👍👌🔥❤️]+$/u,        // Emoji-only
   /^(?:haha|lol|lmao|rofl)/i,     // Laughter
   /^\d+\s*(?:k|K)?$/,             // Just numbers
   /^(?:yes|no|yeah|nope|yep|nah)$/i, // Simple yes/no
@@ -616,10 +617,10 @@ export function extractQuestionsHeuristic(text: string): OpenQuestion[] {
 }
 
 // V3.3 FIX: Normalize voter strings like "ArjunRiyaKiran" -> ["Arjun", "Riya", "Kiran"]
-function normalizeVoters(raw: string): string[] {
+function _normalizeVoters(raw: string): string[] {
   // Try common separators first: comma, pipe, slash, space
-  if (/[,\|\/ ]/.test(raw)) {
-    return Array.from(new Set(raw.split(/[,\|\/ ]+/).map(s => s.trim()).filter(Boolean)));
+  if (/[,|/ ]/.test(raw)) {
+    return Array.from(new Set(raw.split(/[,|/ ]+/).map(s => s.trim()).filter(Boolean)));
   }
   // Fallback: CamelCase boundary split (ArjunRiyaKiran -> Arjun, Riya, Kiran)
   const parts = raw.match(/[A-Z][a-z]+/g) || [];
@@ -727,7 +728,7 @@ export function extractConsensusDecisions(messages: RawChatMessage[]): Extracted
   // Convert statements with 2+ DIFFERENT voters to decisions
   for (const [_, data] of statementVotes) {
     // V3.3 FIX: Use new confidence calculation
-    const { confidence, confirmed, distinct } = computeDecisionConfidence(data.voters, data.agreements);
+    const { confidence, confirmed, distinct: _distinct } = computeDecisionConfidence(data.voters, data.agreements);
 
     // Only include if confirmed (2+ distinct voters with sufficient agreement)
     if (confirmed) {

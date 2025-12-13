@@ -108,7 +108,7 @@ const initialState: HampiExperienceState = {
 };
 
 export const useHampiExperienceStore = create<HampiExperienceState & HampiExperienceActions>(
-  (set, get) => ({
+  (set, _get) => ({
     ...initialState,
 
     // Mode Actions

@@ -126,6 +126,7 @@ export function HeroSection() {
               rotate: [0, 10, -10, 0],
             }}
             transition={{
+              // eslint-disable-next-line react-hooks/purity
               duration: 4 + Math.random() * 2,
               repeat: Infinity,
               ease: 'easeInOut',

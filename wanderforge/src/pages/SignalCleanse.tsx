@@ -15,7 +15,6 @@ import {
   CheckCircle,
   HelpCircle,
   ArrowLeft,
-  Loader2,
   Zap,
   Cpu,
   AlertCircle,
@@ -398,6 +397,7 @@ export default function SignalCleanse() {
         y: Math.random() * 80 + 10,
         isMeme: text.includes('meme') || text.includes('GIF') || text.includes('😂'),
       }));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFloatingMessages(floating);
     }
   }, [chatInput, isProcessing, showResults]);

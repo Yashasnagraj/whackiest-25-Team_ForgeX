@@ -5,9 +5,7 @@ import type {
   TimePreference,
   PlaceCategory,
   ScheduledActivity,
-  ActivityType,
 } from './types';
-import { getPlaceCoords } from './route-optimizer';
 
 // Time slot definitions (hours)
 export const TIME_SLOTS: Record<TimeSlot, { start: number; end: number }> = {
@@ -130,7 +128,7 @@ export function getBestTimeSlot(place: ExtractedPlace): {
 /**
  * Calculate start time for a slot
  */
-function getSlotStartTime(slot: TimeSlot, offset: number = 0): string {
+function _getSlotStartTime(slot: TimeSlot, offset: number = 0): string {
   const slotDef = TIME_SLOTS[slot];
   const hours = slotDef.start + offset;
   return `${hours.toString().padStart(2, '0')}:00`;
@@ -158,7 +156,7 @@ function generateId(): string {
 export function assignTimeSlots(
   places: ExtractedPlace[],
   dayNumber: number,
-  travelTimes: number[] = []
+  _travelTimes: number[] = []
 ): ScheduledActivity[] {
   const activities: ScheduledActivity[] = [];
 

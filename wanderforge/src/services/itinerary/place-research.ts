@@ -4,10 +4,6 @@ import type {
   PlaceKnowledge,
   NearbyPlace,
   ExtractedPlaceInfo,
-  OpeningHours,
-  DEFAULT_DURATIONS,
-  DEFAULT_BEST_TIMES,
-  DEFAULT_PLACE_VALUES,
 } from './place-research.types';
 import type { PlaceCategory, Coords } from './types';
 import { searchPlace, searchNearbyFood } from './web-search';

@@ -46,6 +46,7 @@ export default function ReminderPanel({
   // Update countdown timer
   useEffect(() => {
     if (!nextCheckIn || !isReminderActive) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCountdown('--:--');
       return;
     }

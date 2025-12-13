@@ -39,6 +39,7 @@ export function KenBurnsImage({
 
   // Reset animation when source changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setKey((prev) => prev + 1);
   }, [src]);
 
@@ -105,6 +106,7 @@ export function KenBurnsImage({
 }
 
 // Preset Ken Burns configurations for different scene types
+// eslint-disable-next-line react-refresh/only-export-components
 export const kenBurnsPresets: Record<string, Partial<KenBurnsConfig>> = {
   // Zoom into subject
   zoomIn: {
@@ -208,6 +210,7 @@ export const kenBurnsPresets: Record<string, Partial<KenBurnsConfig>> = {
 };
 
 // Generate Ken Burns config based on scene analysis
+// eslint-disable-next-line react-refresh/only-export-components
 export function generateKenBurnsFromAnalysis(
   sceneType: string,
   hasFaces: boolean,

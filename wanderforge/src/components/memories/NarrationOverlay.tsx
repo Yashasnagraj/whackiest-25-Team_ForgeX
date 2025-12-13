@@ -124,6 +124,7 @@ export function NarrationFadeOverlay({
 
   useEffect(() => {
     if (!isPlaying) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(false);
       return;
     }

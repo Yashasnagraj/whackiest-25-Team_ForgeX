@@ -78,10 +78,12 @@ export async function searchNominatim(
 
         if (!response.ok) {
           const error = new Error(`Nominatim error: ${response.status}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).status = response.status;
 
           // Nominatim returns 429 for rate limiting
           if (response.status === 429 || response.status === 503) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).isRetryable = true;
           }
 
@@ -160,9 +162,11 @@ export async function searchPhoton(
 
         if (!response.ok) {
           const error = new Error(`Photon error: ${response.status}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).status = response.status;
 
           if (response.status === 429 || response.status === 503) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).isRetryable = true;
           }
 

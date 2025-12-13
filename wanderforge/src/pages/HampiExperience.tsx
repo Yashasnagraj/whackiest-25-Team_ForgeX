@@ -940,6 +940,7 @@ export default function HampiExperience() {
               <Button
                 variant="secondary"
                 size="sm"
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onClick={() => { setRegionFilter('all'); setCategoryFilter('all' as any); }}
                 className="mt-4"
               >

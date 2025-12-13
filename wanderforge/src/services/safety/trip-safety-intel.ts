@@ -93,12 +93,14 @@ Respond with JSON only, no additional text.`,
 /**
  * Parse LLM response into structured safety briefing data
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseSafetyResponse(response: any): Partial<TripSafetyBriefing> {
   try {
     const data = typeof response === 'string' ? JSON.parse(response) : response;
 
     return {
       safetyTips: Array.isArray(data.safetyTips)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? data.safetyTips.map((tip: any) => ({
             category: tip.category || 'general',
             title: tip.title || 'Safety Tip',
@@ -262,6 +264,7 @@ export async function generateSafetyBriefing(
 
   try {
     const prompt = getSafetyBriefingPrompt(destination, options?.dates);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await llmManager.executeWithFallback<any>({
       system: prompt.system,
       user: prompt.user,

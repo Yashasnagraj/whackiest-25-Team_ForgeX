@@ -726,6 +726,7 @@ function emitMembersUpdate(): void {
 async function getBatteryLevel(): Promise<number> {
   try {
     if ('getBattery' in navigator) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const battery = await (navigator as any).getBattery();
       return Math.round(battery.level * 100);
     }

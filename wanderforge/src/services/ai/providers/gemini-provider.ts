@@ -54,14 +54,17 @@ export class GeminiProvider {
           if (!response.ok) {
             const errorText = await response.text();
             const error = new Error(`Gemini API error: ${response.status} - ${errorText}`);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).status = response.status;
 
             // Check for rate limit or quota errors
             if (response.status === 429 || /quota|rate.?limit|resource.?exhausted/i.test(errorText)) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (error as any).isRetryable = true;
               // Try to extract retry delay from Google's error format
               const retryMatch = errorText.match(/retryDelay["\s:]+(\d+)/i);
               if (retryMatch) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (error as any).retryAfter = parseInt(retryMatch[1], 10);
               }
             }

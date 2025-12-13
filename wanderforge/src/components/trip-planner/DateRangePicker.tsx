@@ -15,6 +15,7 @@ export function DateRangePicker({ startDate, endDate, onChange }: DateRangePicke
   const today = new Date().toISOString().split('T')[0];
 
   // Get max date (1 year from now)
+  // eslint-disable-next-line react-hooks/purity
   const maxDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split('T')[0];

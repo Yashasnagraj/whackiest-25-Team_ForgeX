@@ -250,7 +250,7 @@ export async function getAllRecommendationsAsync(
   const imbalances = detectCategoryImbalance(places);
 
   // First try to get recommendations from existing knowledge
-  let missingRecs = getRecommendationsFromKnowledge(knowledge, missing);
+  const missingRecs = getRecommendationsFromKnowledge(knowledge, missing);
 
   // If not enough recommendations, do dynamic search
   if (missingRecs.length < missing.length) {

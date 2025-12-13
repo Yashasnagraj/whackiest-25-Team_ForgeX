@@ -105,8 +105,10 @@ async function searchSerper(query: string): Promise<WebSearchResult[]> {
 
         if (!res.ok) {
           const error = new Error(`Serper API error: ${res.status}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).status = res.status;
           if (res.status === 429) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).isRetryable = true;
           }
           throw error;
@@ -191,8 +193,10 @@ async function searchTavily(query: string): Promise<WebSearchResult[]> {
 
         if (!res.ok) {
           const error = new Error(`Tavily API error: ${res.status}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).status = res.status;
           if (res.status === 429) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).isRetryable = true;
           }
           throw error;
@@ -263,8 +267,10 @@ async function searchGoogle(query: string): Promise<WebSearchResult[]> {
 
         if (!res.ok) {
           const error = new Error(`Google Search API error: ${res.status}`);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (error as any).status = res.status;
           if (res.status === 429) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (error as any).isRetryable = true;
           }
           throw error;

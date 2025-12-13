@@ -4,7 +4,6 @@ import type { ChatExtractionResult } from '../services/ai/types';
 import type {
   GeneratedItinerary,
   ItineraryInput,
-  DayItinerary,
   ScheduledActivity,
 } from '../services/itinerary/types';
 import type { PlaceKnowledge, ResearchProgress } from '../services/itinerary/place-research.types';
@@ -13,7 +12,6 @@ import {
   estimateItinerary,
   regenerateDay,
   generateItineraryWithResearch,
-  shouldUseResearchPipeline,
 } from '../services/itinerary/builder';
 
 interface ItineraryState {

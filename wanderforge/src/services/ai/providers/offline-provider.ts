@@ -7,10 +7,8 @@ import {
   extractTasksHeuristic,
   extractDecisionsHeuristic,
   extractQuestionsHeuristic,
-  extractConsensusDecisions,
   // V3.3: New decision extractor with voter normalization
   extractConsensusDecisionsV2,
-  normalizeVoters,
   // V3.3: Dates aggregator with proposals/exceptions
   extractDatesWithProposals,
 } from '../heuristics';
@@ -49,7 +47,7 @@ export class OfflineProvider {
       }
 
       // V3.3: Extract dates with proposals and exceptions
-      const datesAggregated = extractDatesWithProposals(messages);
+      const _datesAggregated = extractDatesWithProposals(messages);
 
       const result: ChatExtractionResult = {
         dates: extractDatesHeuristic(chatText, messages),  // V3.2: Pass messages for proposer tracking

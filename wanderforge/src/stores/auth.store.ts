@@ -27,7 +27,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -154,7 +154,7 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             isLoading: false,
           });
-        } catch (error) {
+        } catch (_error) {
           // Still logout locally even if server fails
           set({
             user: null,
@@ -187,7 +187,7 @@ export const useAuthStore = create<AuthState>()(
               isLoading: false,
             });
           }
-        } catch (error) {
+        } catch (_error) {
           set({
             user: null,
             isAuthenticated: false,

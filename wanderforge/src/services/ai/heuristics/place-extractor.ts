@@ -297,7 +297,7 @@ function cleanPlaceName(name: string): string {
 
 export function extractPlacesHeuristic(text: string, messages: RawChatMessage[]): ExtractedPlace[] {
   const placesMap = new Map<string, ExtractedPlace>();
-  const allWords = text.split(/\s+/);
+  const _allWords = text.split(/\s+/);
 
   // Pattern 1: Look for "visit/go to [Place Name]"
   const indicatorPattern = new RegExp(
@@ -307,7 +307,7 @@ export function extractPlacesHeuristic(text: string, messages: RawChatMessage[])
 
   let match;
   while ((match = indicatorPattern.exec(text)) !== null) {
-    let name = cleanPlaceName(match[1]);
+    const name = cleanPlaceName(match[1]);
 
     // Skip if too short, is a name, or non-place word
     if (name.length < 3) continue;

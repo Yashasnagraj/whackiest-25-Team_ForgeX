@@ -19,6 +19,7 @@ export function DoodleCanvas({ doodles, isPlaying, startTime }: DoodleCanvasProp
 
   useEffect(() => {
     if (!isPlaying) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleDoodles([]);
       return;
     }

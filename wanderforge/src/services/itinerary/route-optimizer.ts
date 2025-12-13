@@ -218,7 +218,7 @@ function calculateClusterDistance(places: ExtractedPlace[]): number {
  */
 export function optimizeVisitOrder(
   places: ExtractedPlace[],
-  startPoint?: Coords
+  _startPoint?: Coords
 ): OptimizedRoute {
   if (places.length <= 1) {
     return {

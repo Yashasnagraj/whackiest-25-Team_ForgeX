@@ -116,7 +116,7 @@ const initialState: ARState = {
   errorMessage: null,
 };
 
-export const useARStore = create<ARState & ARActions>((set, get) => ({
+export const useARStore = create<ARState & ARActions>((set, _get) => ({
   ...initialState,
 
   // Tracking Actions

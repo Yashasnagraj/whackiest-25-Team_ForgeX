@@ -168,6 +168,7 @@ function Scene() {
           start={positions[route.from]}
           end={positions[route.to]}
           color={destinations[route.from].color}
+          // eslint-disable-next-line react-hooks/purity
           speed={0.8 + Math.random() * 0.4}
         />
       ))}

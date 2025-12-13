@@ -89,6 +89,7 @@ function buildOverpassQuery(center: Coords, radiusMeters: number = 10000): strin
  * Parse Overpass API response into EmergencyService objects
  */
 function parseOverpassResponse(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   elements: any[],
   center: Coords
 ): {

@@ -30,7 +30,7 @@ function mapPlaceInputType(type?: string): ExtractedPlace['type'] {
 /**
  * Map PlaceCategory to ExtractedPlace type
  */
-function mapCategoryToExtractedType(category?: PlaceCategory): ExtractedPlace['type'] {
+function _mapCategoryToExtractedType(category?: PlaceCategory): ExtractedPlace['type'] {
   const typeMap: Record<PlaceCategory, ExtractedPlace['type']> = {
     beach: 'landmark',
     landmark: 'landmark',

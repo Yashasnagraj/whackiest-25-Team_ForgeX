@@ -177,14 +177,14 @@ async function generateSceneTitle(photos: ProcessedPhoto[], sceneNumber: number)
     if (aiTitle && aiTitle.length > 2 && aiTitle !== 'Scene' && aiTitle !== 'Untitled Scene') {
       return aiTitle;
     }
-  } catch (error) {
+  } catch (_error) {
     console.warn('AI title generation failed, using fallback');
   }
 
   // Priority 3: Build descriptive title from detected content
   const sceneTypes = photos.map((p) => p.analysis.sceneType);
   const dominantType = getMostCommon(sceneTypes);
-  const timeOfDay = photos[0]?.analysis.timeOfDay || 'day';
+  const _timeOfDay = photos[0]?.analysis.timeOfDay || 'day';
 
   // Build title from actual scene type + time
   const typeLabels: Record<string, string> = {

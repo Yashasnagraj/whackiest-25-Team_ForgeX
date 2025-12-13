@@ -29,6 +29,7 @@ export function CinematicPlayer() {
   } = useCinematicMemoriesStore();
 
   const [showTitleCard, setShowTitleCard] = useState(true);
+  // eslint-disable-next-line react-hooks/purity
   const [photoStartTime, setPhotoStartTime] = useState(Date.now());
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
@@ -173,7 +174,7 @@ export function CinematicPlayer() {
       switch (e.key) {
         case ' ':
           e.preventDefault();
-          isPlaying ? pause() : play();
+          if (isPlaying) { pause(); } else { play(); }
           break;
         case 'ArrowRight':
           nextScene();
