@@ -5,7 +5,7 @@
 
 import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { MessageSquare, Shield, Calendar, Film, Sparkles, Zap, Lock, Brain } from 'lucide-react';
+import { MessageSquare, Shield, Calendar, Film, Sparkles, Zap, Lock, Brain, View } from 'lucide-react';
 
 const features = [
   {
@@ -39,6 +39,14 @@ const features = [
     color: 'from-journey-memory to-accent-purple',
     stats: 'AI Magic',
     highlights: ['Face Detection', 'Auto-Captions', 'Voice Narration'],
+  },
+  {
+    title: 'Heritage AR/VR',
+    description: 'Explore India\'s iconic monuments in immersive 360° VR and interactive 3D AR. Walk through history before you visit.',
+    icon: View,
+    color: 'from-accent-purple to-accent-cyan',
+    stats: 'Immersive',
+    highlights: ['360° Panoramas', '3D AR Models', 'Historical Facts'],
   },
 ];
 
@@ -170,7 +178,7 @@ export function FeatureCards() {
             <span className="text-journey-solution">nothing you don&apos;t</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Four powerful features that work together to make every trip unforgettable.
+            Five powerful features that work together to make every trip unforgettable.
           </p>
         </motion.div>
 

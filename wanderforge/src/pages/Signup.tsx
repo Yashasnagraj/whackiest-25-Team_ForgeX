@@ -18,6 +18,7 @@ import {
   Camera,
   Shield,
   MessageSquare,
+  View,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/auth.store';
 import { toast, ToastContainer } from '../components/auth/Toast';
@@ -46,6 +47,12 @@ const features = [
     title: 'Cinematic Memories',
     description: 'AI-powered trip documentaries',
     color: 'from-journey-memory to-accent-purple',
+  },
+  {
+    icon: View,
+    title: 'Heritage AR/VR',
+    description: 'Immersive 360° monument tours',
+    color: 'from-accent-purple to-accent-cyan',
   },
 ];
 
