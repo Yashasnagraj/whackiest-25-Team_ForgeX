@@ -16,7 +16,20 @@ import {
   Move3D,
   RefreshCw,
 } from 'lucide-react';
-import * as THREE from 'three';
+
+// Use A-Frame's bundled Three.js to avoid multiple instances
+// A-Frame is loaded globally in index.html before this bundle
+declare global {
+  interface Window {
+    AFRAME: {
+      THREE: typeof import('three');
+    };
+  }
+}
+
+// Get THREE from A-Frame to avoid duplicate Three.js instances
+// Falls back to window.THREE if AFRAME.THREE is not available
+const THREE = window.AFRAME?.THREE as typeof import('three');
 
 interface FactCard {
   icon: string;

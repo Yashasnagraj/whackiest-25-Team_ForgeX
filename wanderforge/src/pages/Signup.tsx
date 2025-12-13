@@ -19,11 +19,18 @@ import {
   Shield,
   MessageSquare,
   View,
+  Users,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/auth.store';
 import { toast, ToastContainer } from '../components/auth/Toast';
 
 const features = [
+  {
+    icon: Users,
+    title: 'Trip Chat',
+    description: 'Real-time group planning',
+    color: 'from-violet-500 to-purple-600',
+  },
   {
     icon: MessageSquare,
     title: 'Signal-Cleanse',

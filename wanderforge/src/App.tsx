@@ -9,6 +9,7 @@ import CinematicMemories from './pages/CinematicMemories';
 import TripPlanner from './pages/TripPlanner';
 import HampiExperience from './pages/HampiExperience';
 import TajMahalAR from './pages/TajMahalAR';
+import TripChat from './pages/TripChat';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import VerifyOTP from './pages/VerifyOTP';
@@ -71,6 +72,12 @@ function App() {
           <Route path="/taj-mahal-ar" element={
             <ProtectedRoute>
               <TajMahalAR />
+            </ProtectedRoute>
+          } />
+          {/* Trip Chat */}
+          <Route path="/trip-chat" element={
+            <ProtectedRoute>
+              <TripChat />
             </ProtectedRoute>
           } />
         </Routes>

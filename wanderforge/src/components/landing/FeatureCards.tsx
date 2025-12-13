@@ -5,9 +5,17 @@
 
 import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { MessageSquare, Shield, Calendar, Film, Sparkles, Zap, Lock, Brain, View } from 'lucide-react';
+import { MessageSquare, Shield, Calendar, Film, Sparkles, Zap, Lock, Brain, View, Users } from 'lucide-react';
 
 const features = [
+  {
+    title: 'Trip Chat',
+    description: 'Real-time group chat with AI extraction. Discuss your trip and let AI capture dates, budget, and places.',
+    icon: Users,
+    color: 'from-violet-500 to-purple-600',
+    stats: 'Live',
+    highlights: ['Group Chat', 'AI Extraction', 'Real-Time'],
+  },
   {
     title: 'Signal-Cleanse',
     description: 'AI filters 500 chaotic messages into 5 clear action items. No more endless scrolling.',
@@ -178,7 +186,7 @@ export function FeatureCards() {
             <span className="text-journey-solution">nothing you don&apos;t</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Five powerful features that work together to make every trip unforgettable.
+            Six powerful features that work together to make every trip unforgettable.
           </p>
         </motion.div>
 

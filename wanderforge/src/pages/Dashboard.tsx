@@ -43,6 +43,19 @@ const heroParticles = Array.from({ length: 15 }, (_, i) => ({
 // Feature data with Unsplash backgrounds
 const features = [
   {
+    id: 'trip-chat',
+    icon: Users,
+    title: 'Trip Chat',
+    tagline: 'Chat, extract, plan.',
+    description: 'Real-time group chat with AI extraction. Discuss your trip and let AI capture dates, budget, and places.',
+    gradient: 'from-violet-500 to-purple-600',
+    bgColor: 'bg-violet-900',
+    glowColor: '#8b5cf6',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80',
+    path: '/trip-chat',
+    isNew: true,
+  },
+  {
     id: 'trip-planner',
     icon: Compass,
     title: 'Trip Planner',
@@ -571,7 +584,7 @@ export default function Dashboard() {
             Your Toolkit
           </span>
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white">
-            Five features, <span className="text-journey-solution">infinite possibilities</span>
+            Six features, <span className="text-journey-solution">infinite possibilities</span>
           </h2>
         </motion.div>
       </div>
