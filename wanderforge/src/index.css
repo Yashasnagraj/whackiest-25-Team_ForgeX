@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply box-border; }
+  html { @apply scroll-smooth; }
+  body {
+    @apply bg-dark-900 text-dark-50 font-sans antialiased;
+    @apply min-h-screen overflow-x-hidden m-0;
+  }
+  #root { @apply min-h-screen; }
+}
+
+@layer components {
+  .btn-glow {
+    @apply relative px-8 py-4 rounded-full font-display font-semibold text-lg;
+    @apply bg-gradient-to-r from-primary-500 to-primary-600;
+    @apply text-white shadow-lg transition-all duration-300 ease-out;
+    @apply hover:scale-105 hover:shadow-primary-500/50 hover:shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-dark-800/50 backdrop-blur-xl;
+    @apply border border-dark-700/50 rounded-2xl shadow-xl;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 via-primary-500 to-secondary-400;
+    @apply bg-clip-text text-transparent;
+  }
+
+  .radar-pulse { animation: radarPulse 2s ease-out infinite; }
+  @keyframes radarPulse {
+    0% { transform: scale(0.5); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  .status-safe { @apply bg-emerald-500 text-white; }
+  .status-warning { @apply bg-amber-500 text-dark-900; }
+  .status-danger { @apply bg-red-500 text-white animate-pulse; }
+
+  .timeline-node {
+    @apply w-4 h-4 rounded-full bg-primary-500 ring-4 ring-primary-500/30 transition-all duration-300;
+  }
+  .timeline-node.active { @apply bg-secondary-400 ring-secondary-400/30 scale-125; }
+
+  .feature-card {
+    @apply glass-card p-6 transform transition-all duration-500;
+    @apply hover:scale-[1.02] hover:border-primary-500/50;
+  }
+}
+
+@layer utilities {
+  .text-glow { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}
+
+canvas { outline: none; }
+
+/* Leaflet Map Customizations */
+.leaflet-container {
+  @apply font-sans;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply rounded-xl shadow-lg;
+}
+
+.leaflet-popup-content {
+  @apply m-3;
+}
+
+/* Custom marker pulse animation */
+@keyframes marker-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.5;
+  }
+}
+
+.custom-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.my-location-marker {
+  background: none !important;
+  border: none !important;
+}
+
+/* Custom scrollbar for alerts panel */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
