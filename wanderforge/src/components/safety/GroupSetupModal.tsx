@@ -91,7 +91,7 @@ export default function GroupSetupModal({
       } else {
         setError('Failed to create group. Please check your connection and try again.');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -122,7 +122,7 @@ export default function GroupSetupModal({
       } else {
         setError('Group not found or has expired. Please check the code and try again.');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

@@ -18,6 +18,7 @@ const notifyListeners = () => {
   toastListeners.forEach((listener) => listener([...currentToasts]));
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const toast = {
   success: (message: string) => {
     const id = Date.now().toString();

@@ -380,6 +380,7 @@ function VirtualTour({ onClose }: VirtualTourProps) {
     }, 1000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, tourProgress, currentTourStop, currentStop]);
 
   useEffect(() => {
@@ -398,6 +399,7 @@ function VirtualTour({ onClose }: VirtualTourProps) {
     return () => {
       window.speechSynthesis.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTourStop, isMuted]);
 
   if (!currentMonument) return null;
@@ -700,6 +702,7 @@ export default function HampiExperience() {
 
   useEffect(() => {
     return () => reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

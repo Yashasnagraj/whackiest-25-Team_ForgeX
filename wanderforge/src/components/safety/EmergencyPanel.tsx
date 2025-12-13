@@ -200,6 +200,7 @@ export default function EmergencyPanel({ coordinates, destinationName }: Emergen
     }
 
     fetchResources();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinates.lat, coordinates.lng]);
 
   const handleRefresh = async () => {
@@ -207,7 +208,7 @@ export default function EmergencyPanel({ coordinates, destinationName }: Emergen
     try {
       const data = await findEmergencyServices(coordinates, 15);
       setResources(data);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to refresh');
     } finally {
       setIsLoading(false);

@@ -311,6 +311,7 @@ export default function SafetySentinel() {
         setGpsStatus('idle');
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, groupId, myMemberId, groupCode, groupName, setLiveMembers]);
 
   // Sync reminder state from service

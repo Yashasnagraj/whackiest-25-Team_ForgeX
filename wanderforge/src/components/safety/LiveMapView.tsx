@@ -2,9 +2,10 @@
 import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { HAMPI_CENTER, formatDistance, haversineDistance } from '../../services/safety/geo-utils';
+import { HAMPI_CENTER, haversineDistance } from '../../services/safety/geo-utils';
 
 // Fix Leaflet default marker icons issue with bundlers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -111,6 +112,7 @@ function MapCenterUpdater({ members }: { members: MapMember[] }) {
 
     // Add padding
     map.fitBounds(bounds, { padding: [50, 50], maxZoom: 17 });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members.length]); // Only recenter when member count changes
 
   return null;

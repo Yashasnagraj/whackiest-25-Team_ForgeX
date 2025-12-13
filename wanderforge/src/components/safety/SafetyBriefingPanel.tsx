@@ -225,6 +225,7 @@ export default function SafetyBriefingPanel({
     }
 
     fetchBriefing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destination, coordinates?.lat, coordinates?.lng]);
 
   const handleRefresh = async () => {
@@ -236,7 +237,7 @@ export default function SafetyBriefingPanel({
         forceRefresh: true,
       });
       setBriefing(data);
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to refresh');
     } finally {
       setIsLoading(false);
