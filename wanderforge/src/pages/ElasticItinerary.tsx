@@ -5,12 +5,10 @@ import {
   Map,
   ArrowLeft,
   Clock,
-  Sun,
   Users,
   Zap,
   Coffee,
   MapPin,
-  Thermometer,
   ChevronDown,
   ChevronUp,
   Sparkles,
@@ -29,7 +27,7 @@ import { useItineraryStore } from '../stores/itinerary.store';
 import { useSignalCleanseStore } from '../stores/signal-cleanse.store';
 import { ItineraryMap, DayLegend, MapStats } from '../components/itinerary/ItineraryMap';
 import { getFatigueLevel } from '../services/itinerary/fatigue-scheduler';
-import type { ScheduledActivity, DayItinerary } from '../services/itinerary/types';
+import type { ScheduledActivity } from '../services/itinerary/types';
 
 // Import Leaflet CSS
 import 'leaflet/dist/leaflet.css';

@@ -63,6 +63,7 @@ function getInitials(name: string): string {
 }
 
 // Extract members from Signal-Cleanse extraction result
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractMembersFromChat(extraction: any): TripMember[] {
   const memberNames = new Set<string>();
 

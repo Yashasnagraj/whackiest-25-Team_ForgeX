@@ -1,5 +1,5 @@
 // Selected Places List for Trip Planning
-import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { AnimatePresence, Reorder } from 'framer-motion';
 import { MapPin, Star, Sparkles, X, GripVertical } from 'lucide-react';
 import type { PlaceInput } from '../../services/itinerary/direct-input.types';
 

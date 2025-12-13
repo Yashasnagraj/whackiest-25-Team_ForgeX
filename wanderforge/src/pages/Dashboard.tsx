@@ -23,7 +23,6 @@ import {
   Calendar,
   Users,
   Plane,
-  Globe,
   Landmark,
 } from 'lucide-react';
 import Button from '../components/ui/Button';

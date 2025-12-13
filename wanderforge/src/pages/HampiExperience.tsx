@@ -907,6 +907,7 @@ export default function HampiExperience() {
               return (
                 <button
                   key={category.id}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onClick={() => setCategoryFilter(category.id as any)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${
                     categoryFilter === category.id
