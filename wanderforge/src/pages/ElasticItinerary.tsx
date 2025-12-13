@@ -21,6 +21,8 @@ import {
   Loader2,
   Navigation,
   Shield,
+  Trash2,
+  TimerReset,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useItineraryStore } from '../stores/itinerary.store';
@@ -51,6 +53,8 @@ export default function ElasticItinerary() {
     isResearching,
     researchProgress,
     researchedPlaces,
+    removeActivity,
+    updateActivityDuration,
   } = useItineraryStore();
 
   // Get extraction from Signal-Cleanse if not already set
@@ -482,9 +486,58 @@ export default function ElasticItinerary() {
                                       )}
                                     </div>
                                   )}
-                                  <div className="flex gap-2">
-                                    <Button variant="ghost" size="sm">Extend Time</Button>
-                                    <Button variant="ghost" size="sm">Skip Activity</Button>
+                                  {/* Action Buttons */}
+                                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-dark-700">
+                                    {/* Extend Time Options */}
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-dark-400 text-xs mr-1">
+                                        <TimerReset className="w-3 h-3 inline" /> Extend:
+                                      </span>
+                                      {[15, 30, 60].map((mins) => (
+                                        <button
+                                          key={mins}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            updateActivityDuration(activity.id, activity.duration + mins);
+                                          }}
+                                          className="px-2 py-1 text-xs bg-primary-500/20 text-primary-400 rounded hover:bg-primary-500/30 transition-colors"
+                                        >
+                                          +{mins}m
+                                        </button>
+                                      ))}
+                                    </div>
+
+                                    {/* Reduce Time Options */}
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-dark-400 text-xs mr-1">Reduce:</span>
+                                      {[15, 30].map((mins) => (
+                                        <button
+                                          key={mins}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            const newDuration = Math.max(15, activity.duration - mins);
+                                            updateActivityDuration(activity.id, newDuration);
+                                          }}
+                                          className="px-2 py-1 text-xs bg-dark-600 text-dark-300 rounded hover:bg-dark-500 transition-colors"
+                                        >
+                                          -{mins}m
+                                        </button>
+                                      ))}
+                                    </div>
+
+                                    {/* Remove Activity */}
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (confirm(`Remove "${activity.place.name}" from itinerary?`)) {
+                                          removeActivity(activity.id);
+                                        }
+                                      }}
+                                      className="ml-auto px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors flex items-center gap-1"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                      Remove
+                                    </button>
                                   </div>
                                 </motion.div>
                               )}

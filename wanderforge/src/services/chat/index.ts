@@ -87,3 +87,19 @@ export {
   isExtracting,
   getExtractionSummary,
 } from './chat-extraction.service';
+
+// Place Detection
+export {
+  detectPlaces,
+  detectRecommendationType,
+  clearRecommendationCache as clearPlaceDetectionCache,
+  wasRecentlyRecommended,
+} from './place-detection.service';
+
+// AI Recommendations
+export {
+  processMessageForRecommendations,
+  getRecommendations,
+  getQuickTip,
+  clearRecommendationCache,
+} from './chat-recommendations.service';

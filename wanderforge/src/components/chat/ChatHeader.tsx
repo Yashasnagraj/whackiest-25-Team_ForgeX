@@ -66,8 +66,9 @@ export function ChatHeader({ onToggleExtraction, showExtractionPanel }: Props) {
         {/* Left: Back and group info */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={handleLeave}
             className="p-2 hover:bg-dark-700 rounded-lg transition-colors"
+            title="Exit Chat"
           >
             <ArrowLeft className="w-5 h-5 text-gray-400" />
           </button>
@@ -109,8 +110,19 @@ export function ChatHeader({ onToggleExtraction, showExtractionPanel }: Props) {
           <button
             onClick={handleShare}
             className="p-2 hover:bg-dark-700 rounded-lg transition-colors"
+            title="Share"
           >
             <Share2 className="w-5 h-5 text-gray-400" />
+          </button>
+
+          {/* Exit Chat Button */}
+          <button
+            onClick={handleLeave}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg transition-colors text-red-400"
+            title="Exit Chat"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm font-medium">Exit</span>
           </button>
 
           {/* Extraction toggle */}

@@ -10,6 +10,8 @@ import type { ChatMessage as ChatMessageType } from '../../services/chat/types';
 import { ChatReactionPicker } from './ChatReactionPicker';
 import { ChatReactionDisplay } from './ChatReactionDisplay';
 import { ChatImagePreview } from './ChatImagePreview';
+import { ChatRecommendationCard } from './ChatRecommendationCard';
+import { useChatStore } from '../../stores/chat.store';
 
 interface Props {
   message: ChatMessageType;
@@ -21,8 +23,10 @@ interface Props {
 export function ChatMessage({ message, onReply, onReact, showAvatar = true }: Props) {
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const addRecommendedPlace = useChatStore((state) => state.addRecommendedPlace);
 
   const isSystem = message.type === 'system';
+  const isRecommendation = message.type === 'recommendation';
   const isOwn = message.isOwn;
 
   // System messages
@@ -37,6 +41,20 @@ export function ChatMessage({ message, onReply, onReact, showAvatar = true }: Pr
           {message.content}
         </span>
       </motion.div>
+    );
+  }
+
+  // AI Recommendation messages
+  if (isRecommendation && message.recommendationData) {
+    return (
+      <ChatRecommendationCard
+        destination={message.recommendationData.detectedPlace}
+        recommendations={message.recommendationData.recommendations}
+        onAddToTrip={(item) => {
+          console.log('[ChatMessage] Adding to trip:', item);
+          addRecommendedPlace(item);
+        }}
+      />
     );
   }
 

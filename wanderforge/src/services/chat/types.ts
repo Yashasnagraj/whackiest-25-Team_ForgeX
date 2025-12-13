@@ -51,7 +51,7 @@ export interface DbChatMessage {
   is_deleted: boolean;
 }
 
-export type MessageType = 'text' | 'image' | 'system';
+export type MessageType = 'text' | 'image' | 'system' | 'recommendation';
 
 export interface MediaMetadata {
   width: number;
@@ -122,6 +122,7 @@ export interface ChatMessage {
   type: MessageType;
   mediaUrl: string | null;
   mediaMetadata: MediaMetadata | null;
+  recommendationData?: RecommendationMessageData | null; // For AI recommendations
   reactions: MessageReaction[];
   readBy: string[]; // Member IDs who have read this message
   createdAt: Date;
@@ -223,3 +224,57 @@ export type OnTypingUpdate = (typingMembers: ChatMember[]) => void;
 export type OnExtractionUpdate = (extraction: LiveExtractionState) => void;
 export type OnMemberJoin = (member: ChatMember) => void;
 export type OnNewMessage = (message: ChatMessage) => void;
+
+// ==================== Recommendation Types ====================
+
+export interface PlaceRecommendation {
+  name: string;
+  description: string;
+  rating?: number;
+  type: 'beach' | 'temple' | 'fort' | 'nature' | 'market' | 'viewpoint' | 'museum' | 'other';
+  mustVisit?: boolean;
+}
+
+export interface StayRecommendation {
+  name: string;
+  description: string;
+  priceRange: 'budget' | 'mid' | 'luxury';
+  priceEstimate?: string;
+  rating?: number;
+  amenities?: string[];
+}
+
+export interface RestaurantRecommendation {
+  name: string;
+  description: string;
+  cuisine: string;
+  priceRange: 'budget' | 'mid' | 'premium';
+  rating?: number;
+  mustTry?: string;
+}
+
+export interface ActivityRecommendation {
+  name: string;
+  description: string;
+  duration?: string;
+  bestTime?: string;
+  type: 'adventure' | 'cultural' | 'relaxation' | 'nightlife' | 'shopping' | 'food_tour';
+}
+
+export interface TravelRecommendations {
+  destination: string;
+  places: PlaceRecommendation[];
+  stays: StayRecommendation[];
+  restaurants: RestaurantRecommendation[];
+  activities: ActivityRecommendation[];
+  bestTimeToVisit?: string;
+  weatherTip?: string;
+  quickTip?: string;
+  generatedAt: Date;
+}
+
+export interface RecommendationMessageData {
+  detectedPlace: string;
+  recommendations: TravelRecommendations;
+  triggerMessageId?: string;
+}

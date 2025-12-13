@@ -40,7 +40,7 @@ type MealType = keyof typeof MEAL_CONFIG;
  * Format minutes from midnight to HH:MM string
  */
 function formatTime(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
+  const hours = Math.floor(minutes / 60) % 24; // Wrap to 24-hour format
   const mins = minutes % 60;
   return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 }
@@ -1230,6 +1230,34 @@ export async function generateSmartItinerary(
     } else {
       const daySchedule = buildDaySchedule(dayNumber, dateStr, dayPlaces, budget, numDays);
       days.push(daySchedule);
+    }
+  }
+
+  // Split budget equally among all visit activities
+  if (budget && budget.total > 0) {
+    const totalVisitActivities = days.reduce(
+      (sum, d) => sum + d.activities.filter(a => a.type === 'visit').length,
+      0
+    );
+
+    if (totalVisitActivities > 0) {
+      const equalCostPerActivity = Math.round(budget.total / totalVisitActivities);
+      console.log(`[SmartBuilder] Splitting budget ₹${budget.total} equally: ₹${equalCostPerActivity} per activity (${totalVisitActivities} activities)`);
+
+      // Update each activity's cost and recalculate day totals
+      for (const day of days) {
+        let dayTotalCost = 0;
+        for (const activity of day.activities) {
+          if (activity.type === 'visit') {
+            activity.estimatedCost = equalCostPerActivity;
+            dayTotalCost += equalCostPerActivity;
+          } else if (activity.type === 'meal') {
+            // Keep meal costs as is (from MEAL_CONFIG)
+            dayTotalCost += activity.estimatedCost || 0;
+          }
+        }
+        day.totalCost = dayTotalCost;
+      }
     }
   }
 

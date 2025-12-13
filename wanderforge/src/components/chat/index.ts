@@ -12,3 +12,4 @@ export { ChatReactionPicker } from './ChatReactionPicker';
 export { ChatReactionDisplay } from './ChatReactionDisplay';
 export { ChatImagePreview } from './ChatImagePreview';
 export { ChatExtractionPreview } from './ChatExtractionPreview';
+export { ChatRecommendationCard, QuickTipCard } from './ChatRecommendationCard';

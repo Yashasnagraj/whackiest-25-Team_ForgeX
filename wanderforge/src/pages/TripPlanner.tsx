@@ -13,7 +13,6 @@ import {
   ArrowLeft,
   Map,
   Sparkles,
-  Loader2,
   AlertCircle,
   Calendar,
   MapPin,
@@ -25,6 +24,8 @@ import {
   RotateCcw,
   Shield,
   Check,
+  Trash2,
+  Clock,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import {
@@ -92,6 +93,50 @@ const steps = [
     image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80',
     gradient: 'from-journey-solution to-journey-memory',
   },
+];
+
+// ==================== ABSOLUTELY UNHINGED LOADING MESSAGES ====================
+const funnyLoadingMessages = [
+  { text: "PANIK! Where's my passport?!", emoji: "😱🔥" },
+  { text: "Arguing with Google Maps... again", emoji: "🗣️📍💢" },
+  { text: "Bank account left the chat", emoji: "💸🚪🏃" },
+  { text: "Mom calling to ask if you packed underwear", emoji: "👩📞😤" },
+  { text: "Finding spots your ex hasn't been to", emoji: "🕵️💔✅" },
+  { text: "Calculating how many samosas = 1 meal", emoji: "🥟🧮♾️" },
+  { text: "Your budget said 'LOL nice try'", emoji: "💰😂🪦" },
+  { text: "GPS: 'Make a U-turn' YOU: 'NO'", emoji: "🗺️😤🚗" },
+  { text: "Manifesting flight upgrades...", emoji: "✨🙏✈️" },
+  { text: "Practicing 'I'm not a tourist' face", emoji: "😎🧢🤥" },
+  { text: "Wallet crying in the corner", emoji: "👛😭💧" },
+  { text: "Convincing yourself this is 'self-care'", emoji: "🧘💸🤡" },
+  { text: "Finding WiFi stronger than your will to budget", emoji: "📶💪😅" },
+  { text: "Auto driver entered the chat: '₹500 only'", emoji: "🛺💰🙃" },
+  { text: "Sunscreen? In this economy?!", emoji: "☀️💸😅" },
+  { text: "Calculating chai breaks per kilometer", emoji: "☕📏🧮" },
+  { text: "Your sleep schedule left the group", emoji: "😴👋🌙" },
+  { text: "Instagram captions loading... (will take 3 hrs)", emoji: "📸✍️😵" },
+  { text: "Finding vegetarian options... FOUND 500!", emoji: "🥬🎉🇮🇳" },
+  { text: "Stomach practicing for street food marathon", emoji: "🏃🍜🔥" },
+  { text: "Relatives asking 'Shaadi kab?' in 3... 2...", emoji: "👨‍👩‍👧💍🏃" },
+  { text: "Downloading offline maps... trust issues", emoji: "📱🗺️😰" },
+  { text: "Your comfort zone is SHAKING rn", emoji: "😨🫨✨" },
+  { text: "Packing 47 outfits for 3 days... normal", emoji: "👗👔🧳💥" },
+  { text: "AC vs Window seat debate: ONGOING", emoji: "❄️🪟⚔️" },
+];
+
+const funnyFacts = [
+  "Plot twist: The 'shortcut' adds 2 hours 💀",
+  "Your diet starts after THIS trip... pinky promise 🤞🍕",
+  "Auto driver: 'Meter kharab hai bhaiya' 🛺📉",
+  "You WILL buy something you don't need. Accept it. 🛍️",
+  "Hotel checkout is at 11am. You'll wake up at 10:58 😴⏰",
+  "That 'quick bathroom break' = 45 minutes 🚻📱",
+  "You packed 3 books. You'll read 0. 📚🙃",
+  "The best photo spot has 47 people waiting 📸😤",
+  "'Just one more temple' - said 7 temples ago 🛕🏃",
+  "Your phone will die at the WORST moment 📱💀",
+  "You'll miss your train by exactly 2 minutes 🚂😭",
+  "Street food at 2am hits DIFFERENT 🍜✨🌙",
 ];
 
 // Step Section Component with Parallax
@@ -243,6 +288,28 @@ export default function TripPlanner() {
   const navigate = useNavigate();
   const store = useTripPlannerStore();
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Hilarious loading state
+  const [funnyMessageIndex, setFunnyMessageIndex] = useState(0);
+  const [funnyFactIndex, setFunnyFactIndex] = useState(0);
+
+  // Rotate funny messages every 2.5 seconds during generation
+  useEffect(() => {
+    if (store.stage !== 'generating') return;
+
+    const messageInterval = setInterval(() => {
+      setFunnyMessageIndex((prev) => (prev + 1) % funnyLoadingMessages.length);
+    }, 2500);
+
+    const factInterval = setInterval(() => {
+      setFunnyFactIndex((prev) => (prev + 1) % funnyFacts.length);
+    }, 5000);
+
+    return () => {
+      clearInterval(messageInterval);
+      clearInterval(factInterval);
+    };
+  }, [store.stage]);
 
   // Refs for each section
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -570,7 +637,7 @@ export default function TripPlanner() {
                       <Wallet className="w-5 h-5 text-emerald-400" />
                       <span className="text-gray-300">Budget</span>
                     </div>
-                    <span className="text-white font-medium">₹{store.budget.toLocaleString()}</span>
+                    <span className="text-white font-medium">₹{store.budget.amount.toLocaleString()}</span>
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-dark-700 rounded-xl">
@@ -624,52 +691,445 @@ export default function TripPlanner() {
           </motion.div>
         )}
 
-        {/* ==================== GENERATING STAGE ==================== */}
+        {/* ==================== ABSOLUTELY UNHINGED GENERATING STAGE ==================== */}
         {store.stage === 'generating' && (
           <motion.div
             key="generating"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex items-center justify-center pt-20"
+            className="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden"
           >
-            <div className="text-center max-w-md px-6">
+            {/* CHAOTIC Background - emojis flying everywhere */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {/* Flying plane across screen */}
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center"
+                className="absolute text-5xl"
+                initial={{ x: '-10%', y: '20%' }}
+                animate={{ x: '110%', y: '15%', rotate: [0, 10, -5, 0] }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
               >
-                <Loader2 className="w-10 h-10 text-white" />
+                ✈️
               </motion.div>
 
-              <h2 className="text-3xl font-display font-bold text-white mb-2">
-                Creating Your Itinerary
-              </h2>
-              <p className="text-gray-400 mb-8">
-                Our AI is researching places and optimizing your route...
-              </p>
+              {/* Spinning compass */}
+              <motion.div
+                className="absolute top-32 left-[15%] text-4xl"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              >
+                🧭
+              </motion.div>
 
+              {/* Bouncing money flying away */}
+              <motion.div
+                className="absolute top-20 right-[20%] text-3xl"
+                animate={{
+                  y: [0, -30, 0],
+                  x: [0, 20, 40, 60],
+                  opacity: [1, 0.8, 0.5, 0],
+                  scale: [1, 0.9, 0.8, 0.5]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                💸
+              </motion.div>
+
+              {/* Panicking person */}
+              <motion.div
+                className="absolute bottom-40 left-[10%] text-4xl"
+                animate={{
+                  rotate: [-10, 10, -10],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ duration: 0.3, repeat: Infinity }}
+              >
+                😱
+              </motion.div>
+
+              {/* Exploding suitcase */}
+              <motion.div
+                className="absolute bottom-32 right-[15%] text-4xl"
+                animate={{
+                  rotate: [0, -5, 5, -5, 0],
+                  scale: [1, 1.2, 1, 1.2, 1]
+                }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+              >
+                🧳💥
+              </motion.div>
+
+              {/* Floating food */}
+              <motion.div
+                className="absolute top-[45%] left-[8%] text-3xl"
+                animate={{ y: [0, -20, 0], rotate: [0, 360] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                🍜
+              </motion.div>
+
+              {/* Camera flash */}
+              <motion.div
+                className="absolute top-[35%] right-[10%] text-3xl"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+              >
+                📸✨
+              </motion.div>
+
+              {/* Auto rickshaw zooming */}
+              <motion.div
+                className="absolute bottom-24 text-4xl"
+                initial={{ x: '110%' }}
+                animate={{ x: '-10%' }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+              >
+                🛺💨
+              </motion.div>
+
+              {/* Random floating elements */}
+              <motion.div
+                className="absolute top-[60%] right-[25%] text-2xl opacity-40"
+                animate={{ y: [0, -30, 0], x: [0, 10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+              >
+                🗺️
+              </motion.div>
+              <motion.div
+                className="absolute top-[25%] left-[30%] text-2xl opacity-40"
+                animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+              >
+                🎒
+              </motion.div>
+            </div>
+
+            <div className="text-center max-w-lg px-6 relative z-10">
+              {/* ========== ULTIMATE CHAOTIC LOADING SCENE ========== */}
+              <div className="mb-8 h-44 flex items-center justify-center relative">
+
+                {/* SCENE: Person trying to close overstuffed suitcase */}
+                <div className="relative w-64 h-40">
+
+                  {/* The suitcase - shaking violently */}
+                  <motion.div
+                    className="absolute bottom-4 left-1/2 -translate-x-1/2"
+                    animate={{
+                      rotate: [-3, 3, -3, 3, -3],
+                      scale: [1, 1.05, 1, 1.08, 1],
+                    }}
+                    transition={{ duration: 0.3, repeat: Infinity }}
+                  >
+                    <span className="text-7xl">🧳</span>
+
+                    {/* Suitcase bulging - items trying to escape */}
+                    <motion.span
+                      className="absolute -top-3 left-1/2 -translate-x-1/2 text-2xl"
+                      animate={{
+                        y: [-5, -15, -5],
+                        rotate: [0, 20, -20, 0],
+                        opacity: [0.8, 1, 0.8],
+                      }}
+                      transition={{ duration: 0.4, repeat: Infinity }}
+                    >
+                      👙
+                    </motion.span>
+                    <motion.span
+                      className="absolute -top-1 -left-3 text-xl"
+                      animate={{
+                        x: [-5, -15, -5],
+                        rotate: [0, -30, 0],
+                        opacity: [0.7, 1, 0.7],
+                      }}
+                      transition={{ duration: 0.35, repeat: Infinity, delay: 0.1 }}
+                    >
+                      👕
+                    </motion.span>
+                    <motion.span
+                      className="absolute -top-2 -right-4 text-xl"
+                      animate={{
+                        x: [5, 18, 5],
+                        rotate: [0, 45, 0],
+                        opacity: [0.6, 1, 0.6],
+                      }}
+                      transition={{ duration: 0.45, repeat: Infinity, delay: 0.2 }}
+                    >
+                      🩴
+                    </motion.span>
+                    <motion.span
+                      className="absolute top-0 left-8 text-lg"
+                      animate={{
+                        y: [-8, -20, -8],
+                        x: [0, 5, 0],
+                        opacity: [0.5, 1, 0.5],
+                      }}
+                      transition={{ duration: 0.5, repeat: Infinity, delay: 0.15 }}
+                    >
+                      🧴
+                    </motion.span>
+                  </motion.div>
+
+                  {/* Person JUMPING on suitcase to close it */}
+                  <motion.div
+                    className="absolute bottom-8 left-1/2 -translate-x-1/2"
+                    animate={{
+                      y: [0, -40, 0, -35, 0, -45, 0],
+                      scale: [1, 0.9, 1.1, 0.9, 1.1, 0.85, 1.1],
+                    }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <motion.span
+                      className="text-6xl block"
+                      animate={{
+                        rotate: [0, -15, 0, 15, 0, -10, 0],
+                      }}
+                      transition={{ duration: 1.2, repeat: Infinity }}
+                    >
+                      🧍
+                    </motion.span>
+                  </motion.div>
+
+                  {/* Sweat drops flying */}
+                  <motion.span
+                    className="absolute top-4 right-12 text-2xl"
+                    animate={{
+                      y: [0, -20],
+                      x: [0, 15],
+                      opacity: [1, 0],
+                      scale: [1, 0.5],
+                    }}
+                    transition={{ duration: 0.6, repeat: Infinity }}
+                  >
+                    💦
+                  </motion.span>
+                  <motion.span
+                    className="absolute top-8 left-10 text-xl"
+                    animate={{
+                      y: [0, -25],
+                      x: [0, -12],
+                      opacity: [1, 0],
+                      scale: [1, 0.4],
+                    }}
+                    transition={{ duration: 0.5, repeat: Infinity, delay: 0.3 }}
+                  >
+                    💦
+                  </motion.span>
+                  <motion.span
+                    className="absolute top-2 left-1/2 text-lg"
+                    animate={{
+                      y: [0, -30],
+                      opacity: [1, 0],
+                    }}
+                    transition={{ duration: 0.7, repeat: Infinity, delay: 0.5 }}
+                  >
+                    💦
+                  </motion.span>
+
+                  {/* Stress symbols */}
+                  <motion.span
+                    className="absolute top-0 right-8 text-3xl"
+                    animate={{
+                      scale: [0.8, 1.3, 0.8],
+                      rotate: [0, 180, 360],
+                      opacity: [0.6, 1, 0.6],
+                    }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                  >
+                    💢
+                  </motion.span>
+
+                  {/* Stars from struggle */}
+                  <motion.span
+                    className="absolute top-6 left-6 text-xl"
+                    animate={{
+                      scale: [0.5, 1.2, 0.5],
+                      rotate: [0, 180, 360],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                  >
+                    ⭐
+                  </motion.span>
+                  <motion.span
+                    className="absolute top-10 right-6 text-lg"
+                    animate={{
+                      scale: [0.4, 1, 0.4],
+                      rotate: [360, 180, 0],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{ duration: 0.5, repeat: Infinity, delay: 0.4 }}
+                  >
+                    ✨
+                  </motion.span>
+
+                  {/* Shockwave effect when landing */}
+                  <motion.div
+                    className="absolute bottom-2 left-1/2 -translate-x-1/2 w-24 h-4 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full"
+                    animate={{
+                      scaleX: [0.5, 1.5, 0.5],
+                      opacity: [0, 0.5, 0],
+                    }}
+                    transition={{ duration: 0.4, repeat: Infinity, repeatDelay: 0.8 }}
+                  />
+                </div>
+              </div>
+
+              {/* Shaking title */}
+              <motion.h2
+                className="text-3xl md:text-4xl font-display font-bold text-white mb-4"
+                animate={{
+                  x: [0, -2, 2, -2, 0],
+                }}
+                transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
+              >
+                Creating Your Adventure
+                <motion.span
+                  className="inline-block ml-2"
+                  animate={{ rotate: [0, 15, -15, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  🔥
+                </motion.span>
+              </motion.h2>
+
+              {/* Rotating funny messages with dramatic entrance */}
+              <div className="h-20 mb-6 flex items-center justify-center">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={funnyMessageIndex}
+                    initial={{ opacity: 0, y: 30, scale: 0.8, rotate: -5 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, y: -30, scale: 0.8, rotate: 5 }}
+                    transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
+                    className="text-xl md:text-2xl text-white font-medium"
+                  >
+                    {funnyLoadingMessages[funnyMessageIndex].text}
+                    <motion.span
+                      className="ml-2 inline-block"
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 0.5, repeat: Infinity }}
+                    >
+                      {funnyLoadingMessages[funnyMessageIndex].emoji}
+                    </motion.span>
+                  </motion.p>
+                </AnimatePresence>
+              </div>
+
+              {/* Progress section */}
               {store.generationProgress && (
-                <div className="space-y-3">
+                <div className="space-y-4 mb-6">
+                  {/* Progress stats with attitude */}
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">
-                      Researching {store.generationProgress.currentPlace || 'places'}...
-                    </span>
-                    <span className="text-primary-400">
+                    <motion.span
+                      className="text-gray-400"
+                      animate={{ opacity: [0.7, 1, 0.7] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      Stalking <span className="text-primary-400 font-semibold">{store.generationProgress.currentPlace || 'places'}</span> on the internet... 🕵️
+                    </motion.span>
+                    <span className="text-primary-400 font-bold text-lg">
                       {store.generationProgress.completed}/{store.generationProgress.total}
                     </span>
                   </div>
-                  <div className="w-full h-3 bg-dark-700 rounded-full overflow-hidden">
+
+                  {/* EPIC progress bar */}
+                  <div className="relative pt-8">
+                    <div className="w-full h-5 bg-dark-700 rounded-full overflow-hidden border border-white/10">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-primary-500 via-secondary-500 via-accent-cyan to-primary-500 bg-[length:300%_100%]"
+                        initial={{ width: 0 }}
+                        animate={{
+                          width: `${(store.generationProgress.completed / store.generationProgress.total) * 100}%`,
+                          backgroundPosition: ['0% 0%', '100% 0%'],
+                        }}
+                        transition={{
+                          width: { duration: 0.5 },
+                          backgroundPosition: { duration: 1.5, repeat: Infinity, ease: 'linear' },
+                        }}
+                      />
+                    </div>
+
+                    {/* Traveler on progress bar - changes based on progress */}
                     <motion.div
-                      className="h-full bg-gradient-to-r from-primary-500 to-secondary-500"
-                      initial={{ width: 0 }}
-                      animate={{
-                        width: `${(store.generationProgress.completed / store.generationProgress.total) * 100}%`,
+                      className="absolute -top-1 text-3xl"
+                      style={{
+                        left: `calc(${Math.min((store.generationProgress.completed / store.generationProgress.total) * 100, 95)}% - 15px)`,
                       }}
-                    />
+                      animate={{ y: [0, -8, 0], rotate: [-5, 5, -5] }}
+                      transition={{ duration: 0.3, repeat: Infinity }}
+                    >
+                      {store.generationProgress.completed / store.generationProgress.total < 0.3 ? '🚶' :
+                       store.generationProgress.completed / store.generationProgress.total < 0.6 ? '🏃' :
+                       store.generationProgress.completed / store.generationProgress.total < 0.9 ? '🏃💨' : '🎉'}
+                    </motion.div>
+
+                    {/* Start and end markers */}
+                    <span className="absolute left-0 -bottom-6 text-xs text-gray-500">🏠 Start</span>
+                    <span className="absolute right-0 -bottom-6 text-xs text-gray-500">🏝️ Vacation!</span>
                   </div>
+
+                  {/* Percentage with celebration */}
+                  <motion.p
+                    className="text-gray-400 text-sm pt-4"
+                    animate={store.generationProgress.completed / store.generationProgress.total > 0.8 ? {
+                      scale: [1, 1.1, 1],
+                      color: ['#9ca3af', '#00d9ff', '#9ca3af']
+                    } : {}}
+                    transition={{ duration: 0.5, repeat: Infinity }}
+                  >
+                    {Math.round((store.generationProgress.completed / store.generationProgress.total) * 100)}% there...
+                    {store.generationProgress.completed / store.generationProgress.total < 0.3 && " we just started bestie 😅"}
+                    {store.generationProgress.completed / store.generationProgress.total >= 0.3 && store.generationProgress.completed / store.generationProgress.total < 0.6 && " halfway to paradise! 🌴"}
+                    {store.generationProgress.completed / store.generationProgress.total >= 0.6 && store.generationProgress.completed / store.generationProgress.total < 0.9 && " almost there! 🔥"}
+                    {store.generationProgress.completed / store.generationProgress.total >= 0.9 && " GET READY! 🎉🎉🎉"}
+                  </motion.p>
                 </div>
               )}
+
+              {/* Rotating fun facts with style */}
+              <motion.div
+                className="mt-6 p-4 bg-gradient-to-r from-dark-800/80 to-dark-700/80 rounded-2xl border border-white/10 backdrop-blur-sm"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={funnyFactIndex}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="text-sm text-gray-300"
+                  >
+                    <motion.span
+                      className="inline-block mr-2"
+                      animate={{ rotate: [0, 20, -20, 0] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      💡
+                    </motion.span>
+                    {funnyFacts[funnyFactIndex]}
+                  </motion.p>
+                </AnimatePresence>
+              </motion.div>
+
+              {/* Tiny disclaimer */}
+              <motion.p
+                className="mt-6 text-xs text-gray-600"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
+                transition={{ delay: 2 }}
+              >
+                * No wallets were harmed in the making of this itinerary... yet 💀
+              </motion.p>
             </div>
           </motion.div>
         )}
@@ -760,24 +1220,66 @@ export default function TripPlanner() {
                         .map((activity) => (
                           <div
                             key={activity.id}
-                            className="flex items-start gap-4 p-3 bg-dark-700 rounded-xl"
+                            className="p-3 bg-dark-700 rounded-xl"
                           >
-                            <div className="text-center min-w-[60px]">
-                              <p className="text-primary-400 font-medium">{activity.startTime}</p>
-                              <p className="text-gray-500 text-xs">{activity.duration} min</p>
-                            </div>
-                            <div className="flex-1">
-                              <h4 className="font-medium text-white">{activity.place.name}</h4>
-                              {activity.bestTimeReason && (
-                                <p className="text-gray-400 text-sm mt-0.5">{activity.bestTimeReason}</p>
+                            <div className="flex items-start gap-4">
+                              <div className="text-center min-w-[60px]">
+                                <p className="text-primary-400 font-medium">{activity.startTime}</p>
+                                <p className="text-gray-500 text-xs">{activity.duration} min</p>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-medium text-white">{activity.place.name}</h4>
+                                {activity.bestTimeReason && (
+                                  <p className="text-gray-400 text-sm mt-0.5">{activity.bestTimeReason}</p>
+                                )}
+                              </div>
+                              {activity.travelFromPrev && (
+                                <div className="text-xs text-gray-500 text-right">
+                                  <p>{activity.travelFromPrev.distance.toFixed(1)} km</p>
+                                  <p>{activity.travelFromPrev.duration} min</p>
+                                </div>
                               )}
                             </div>
-                            {activity.travelFromPrev && (
-                              <div className="text-xs text-gray-500 text-right">
-                                <p>{activity.travelFromPrev.distance.toFixed(1)} km</p>
-                                <p>{activity.travelFromPrev.duration} min</p>
+
+                            {/* Action Controls */}
+                            <div className="mt-3 pt-3 border-t border-dark-600 flex flex-wrap items-center gap-2">
+                              {/* Extend Time */}
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-3 h-3 text-gray-500" />
+                                <span className="text-gray-500 text-xs">Time:</span>
+                                {[15, 30, 60].map((mins) => (
+                                  <button
+                                    key={`add-${mins}`}
+                                    onClick={() => store.updateActivityDuration(activity.id, activity.duration + mins)}
+                                    className="px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-400 rounded hover:bg-emerald-500/30 transition-colors"
+                                  >
+                                    +{mins}m
+                                  </button>
+                                ))}
+                                {[15, 30].map((mins) => (
+                                  <button
+                                    key={`sub-${mins}`}
+                                    onClick={() => store.updateActivityDuration(activity.id, Math.max(15, activity.duration - mins))}
+                                    className="px-2 py-0.5 text-xs bg-dark-600 text-gray-400 rounded hover:bg-dark-500 transition-colors"
+                                  >
+                                    -{mins}m
+                                  </button>
+                                ))}
                               </div>
-                            )}
+
+                              {/* Remove Button */}
+                              <button
+                                onClick={() => {
+                                  if (confirm(`Remove "${activity.place.name}" from itinerary?`)) {
+                                    store.removeActivity(activity.id);
+                                  }
+                                }}
+                                className="ml-auto px-2 py-0.5 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors flex items-center gap-1"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                Remove
+                              </button>
+                            </div>
                           </div>
                         ))}
                     </div>

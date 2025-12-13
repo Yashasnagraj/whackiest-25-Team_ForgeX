@@ -58,6 +58,7 @@ interface ItineraryState {
   // Editing actions
   moveActivity: (activityId: string, toDay: number) => void;
   removeActivity: (activityId: string) => void;
+  updateActivityDuration: (activityId: string, newDuration: number) => void;
   regenerateDayItinerary: (dayNumber: number) => void;
 
   // Reset
@@ -345,6 +346,40 @@ export const useItineraryStore = create<ItineraryState>((set, get) => ({
     const newDays = generatedItinerary.days.map(day => ({
       ...day,
       activities: day.activities.filter(a => a.id !== activityId),
+    }));
+
+    set({
+      generatedItinerary: {
+        ...generatedItinerary,
+        days: newDays,
+      },
+    });
+  },
+
+  updateActivityDuration: (activityId, newDuration) => {
+    const { generatedItinerary } = get();
+    if (!generatedItinerary) return;
+
+    const newDays = generatedItinerary.days.map(day => ({
+      ...day,
+      activities: day.activities.map(activity => {
+        if (activity.id === activityId) {
+          // Calculate new end time
+          const startMinutes = parseInt(activity.startTime.split(':')[0]) * 60 +
+                               parseInt(activity.startTime.split(':')[1]);
+          const endMinutes = startMinutes + newDuration;
+          const endHours = Math.floor(endMinutes / 60) % 24;
+          const endMins = endMinutes % 60;
+          const newEndTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
+
+          return {
+            ...activity,
+            duration: newDuration,
+            endTime: newEndTime,
+          };
+        }
+        return activity;
+      }),
     }));
 
     set({

@@ -36,27 +36,33 @@ export function ChatTypingIndicator() {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400"
+        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+        className="flex items-center gap-3 px-4 py-2"
       >
-        {/* Animated dots */}
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.span
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-gray-400"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-            />
-          ))}
+        <div className="flex items-center gap-2 px-3 py-2 bg-dark-700/50 backdrop-blur-sm rounded-xl border border-white/5">
+          {/* Animated dots with gradient */}
+          <div className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <motion.span
+                key={i}
+                className="w-2 h-2 rounded-full bg-gradient-to-r from-accent-cyan to-accent-purple"
+                animate={{
+                  scale: [0.8, 1.2, 0.8],
+                  opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  delay: i * 0.15,
+                  ease: 'easeInOut',
+                }}
+              />
+            ))}
+          </div>
+          <span className="text-sm text-gray-400">{text}</span>
         </div>
-        <span>{text}</span>
       </motion.div>
     </AnimatePresence>
   );

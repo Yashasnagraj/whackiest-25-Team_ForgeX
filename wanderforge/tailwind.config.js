@@ -91,6 +91,8 @@ export default {
         'gradient-x': 'gradientX 3s ease infinite',
         'gradient-y': 'gradientY 3s ease infinite',
         'blob': 'blob 7s infinite',
+        'blob-slow': 'blob 10s infinite',
+        'blob-fast': 'blob 5s infinite',
         'shimmer': 'shimmer 2s linear infinite',
         'bounce-slow': 'bounce 3s infinite',
         'wiggle': 'wiggle 1s ease-in-out infinite',

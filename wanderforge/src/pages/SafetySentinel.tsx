@@ -20,6 +20,9 @@ import {
   Loader2,
   MapPinOff,
   RefreshCw,
+  Calendar,
+  Activity,
+  Compass,
 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import {
@@ -31,6 +34,8 @@ import {
   QRCodeDisplay,
   EmergencyPanel,
   SafetyBriefingPanel,
+  ImpactStatCard,
+  SafetyScoreRing,
 } from '../components/safety';
 import { useSafetyStore } from '../stores/safety.store';
 import { useAuthStore } from '../stores/auth.store';
@@ -83,7 +88,8 @@ interface Alert {
   isNew: boolean;
 }
 
-const initialMembers: TeamMember[] = [
+// Demo members - only used when demo mode is active
+const demoMembers: TeamMember[] = [
   {
     id: '1',
     name: 'Yashas',
@@ -138,16 +144,9 @@ const initialMembers: TeamMember[] = [
   },
 ];
 
-const initialAlerts: Alert[] = [
-  {
-    id: '1',
-    type: 'info',
-    title: 'Group Check',
-    message: 'All 4 members are within 200m radius',
-    time: 'Just now',
-    isNew: true,
-  },
-];
+// Empty initial state - data comes from live tracking or demo mode
+const initialMembers: TeamMember[] = [];
+const initialAlerts: Alert[] = [];
 
 export default function SafetySentinel() {
   const navigate = useNavigate();
@@ -328,6 +327,18 @@ export default function SafetySentinel() {
 
   // Radar demo simulation
   const runSimulation = () => {
+    // Load demo members first if empty
+    setMembers(demoMembers);
+    setAlerts([
+      {
+        id: '1',
+        type: 'info',
+        title: 'Demo Mode Active',
+        message: 'Simulating group tracking at Hampi with 4 team members',
+        time: 'Just now',
+        isNew: true,
+      },
+    ]);
     setSimulationStep(1);
 
     setTimeout(() => {
@@ -626,6 +637,145 @@ export default function SafetySentinel() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Impact Dashboard Hero Section */}
+        <section className="relative overflow-hidden mb-8">
+          {/* Organic blob backgrounds */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-blob" />
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-blob-slow" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl animate-blob-fast" />
+          </div>
+
+          {/* Stats Grid */}
+          <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4">
+            <ImpactStatCard
+              value={viewMode === 'live' ? liveMembers.length : members.length}
+              label="Team Members"
+              icon={<Users className="w-5 h-5" />}
+              color="cyan"
+              trend={trackingMode === 'live' ? 'Live Tracking' : 'Demo Mode'}
+              delay={0}
+            />
+            <ImpactStatCard
+              value={
+                viewMode === 'live'
+                  ? liveMembers.filter((m) => m.status === 'safe').length
+                  : members.filter((m) => m.status === 'safe').length
+              }
+              label="Safe & Sound"
+              icon={<Shield className="w-5 h-5" />}
+              color="emerald"
+              delay={1}
+            />
+            <ImpactStatCard
+              value={tripContext.hasActiveTrip ? tripContext.tripDays : 0}
+              label="Days Protected"
+              icon={<Calendar className="w-5 h-5" />}
+              color="primary"
+              suffix={tripContext.hasActiveTrip ? '' : ''}
+              delay={2}
+            />
+            <ImpactStatCard
+              value={alerts.filter((a) => a.isNew).length}
+              label="Active Alerts"
+              icon={<AlertTriangle className="w-5 h-5" />}
+              color={alerts.some((a) => a.type === 'danger') ? 'red' : alerts.some((a) => a.type === 'warning') ? 'amber' : 'emerald'}
+              delay={3}
+            />
+          </div>
+
+          {/* Safety Score + Quick Actions Row */}
+          <div className="relative mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Safety Score Ring */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6 flex items-center gap-6"
+            >
+              <SafetyScoreRing
+                score={
+                  viewMode === 'live'
+                    ? Math.round((liveMembers.filter((m) => m.status === 'safe').length / Math.max(liveMembers.length, 1)) * 100)
+                    : Math.round((members.filter((m) => m.status === 'safe').length / Math.max(members.length, 1)) * 100)
+                }
+                size={100}
+              />
+              <div>
+                <h3 className="text-white font-semibold mb-1">Group Status</h3>
+                <p className="text-gray-400 text-sm">
+                  {viewMode === 'live' && liveMembers.length === 0
+                    ? 'No members tracking'
+                    : members.every((m) => m.status === 'safe')
+                    ? 'Everyone is safe!'
+                    : 'Some members need attention'}
+                </p>
+                {tripContext.hasActiveTrip && (
+                  <p className="text-emerald-400 text-xs mt-2 flex items-center gap-1">
+                    <Compass className="w-3 h-3" />
+                    {tripContext.destination}
+                  </p>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="md:col-span-2 bg-dark-800/50 backdrop-blur-sm border border-dark-700 rounded-2xl p-6"
+            >
+              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-emerald-400" />
+                Quick Actions
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="flex-col h-auto py-3"
+                  onClick={() => setShowGroupSetupModal(true)}
+                >
+                  <Users className="w-5 h-5 mb-1" />
+                  <span className="text-xs">{groupId ? 'Manage Group' : 'Create Group'}</span>
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="flex-col h-auto py-3"
+                  onClick={() => setShowSetupModal(true)}
+                >
+                  <Phone className="w-5 h-5 mb-1" />
+                  <span className="text-xs">Setup Phone</span>
+                </Button>
+                {groupId && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="flex-col h-auto py-3"
+                    onClick={() => setShowShareModal(true)}
+                  >
+                    <Share2 className="w-5 h-5 mb-1" />
+                    <span className="text-xs">Share Link</span>
+                  </Button>
+                )}
+                {!tripContext.hasActiveTrip && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="flex-col h-auto py-3"
+                    onClick={() => navigate('/trip-planner')}
+                  >
+                    <Compass className="w-5 h-5 mb-1" />
+                    <span className="text-xs">Plan Trip</span>
+                  </Button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main View Area */}
           <div className="lg:col-span-2">
@@ -713,6 +863,27 @@ export default function SafetySentinel() {
                   </AnimatePresence>
 
                   <div className="absolute w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50" />
+
+                  {/* Empty State Overlay */}
+                  {members.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute inset-0 flex flex-col items-center justify-center bg-dark-900/80 backdrop-blur-sm z-10"
+                    >
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+                        <Users className="w-10 h-10 text-emerald-400" />
+                      </div>
+                      <h3 className="text-white font-semibold text-lg mb-2">No Members Tracking</h3>
+                      <p className="text-gray-400 text-sm text-center max-w-xs mb-6">
+                        Run the demo to see how Safety Sentinel tracks your group in real-time
+                      </p>
+                      <Button variant="primary" size="sm" onClick={runSimulation}>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Run Demo
+                      </Button>
+                    </motion.div>
+                  )}
 
                   {members.map((member) => {
                     const x =
@@ -1013,65 +1184,84 @@ export default function SafetySentinel() {
                     : 'Tracking...';
 
                   return (
-                    <div
+                    <motion.div
                       key={member.id}
-                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ scale: 1.02 }}
+                      className={`relative overflow-hidden rounded-xl cursor-pointer transition-all ${
                         selectedMember?.id === member.id
-                          ? 'bg-dark-700'
-                          : 'bg-dark-800/50 hover:bg-dark-700/50'
-                      } ${member.status === 'danger' ? 'ring-1 ring-red-500/50' : ''}`}
+                          ? 'bg-dark-700 ring-2 ring-emerald-500/50'
+                          : 'bg-gradient-to-br from-dark-800 to-dark-900 hover:from-dark-700 hover:to-dark-800'
+                      } border border-dark-700`}
                       onClick={() =>
                         setSelectedMember(member as unknown as TeamMember)
                       }
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`
-                          w-10 h-10 rounded-full flex items-center justify-center
-                          ${getStatusColor(member.status)} text-white font-bold text-xs
-                        `}
-                        >
-                          {member.avatar}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <p className="font-medium text-dark-100">{member.name}</p>
-                            <span className="text-dark-500 text-xs">
-                              {lastSeenText}
-                            </span>
-                          </div>
-                          <p className={`text-sm truncate flex items-center gap-1 ${hasLocation ? 'text-dark-400' : 'text-amber-400'}`}>
-                            {!hasLocation && viewMode === 'live' && (
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                            )}
-                            {locationText}
-                          </p>
-                        </div>
-                      </div>
+                      {/* Status gradient bar */}
+                      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+                        member.status === 'safe' ? 'from-emerald-500 to-emerald-400' :
+                        member.status === 'warning' ? 'from-amber-500 to-amber-400' :
+                        'from-red-500 to-red-400'
+                      }`} />
 
-                      <div className="flex items-center gap-4 mt-2 text-xs">
-                        <div className="flex items-center gap-1 text-dark-400">
-                          <Battery
-                            className={`w-3 h-3 ${member.battery < 20 ? 'text-red-400' : ''}`}
-                          />
-                          <span className={member.battery < 20 ? 'text-red-400' : ''}>
-                            {member.battery}%
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 text-dark-400">
-                          <Wifi
-                            className={`w-3 h-3 ${member.signal === 0 ? 'text-red-400' : ''}`}
-                          />
-                          <span>{member.signal}/4</span>
-                        </div>
-                        {member.isMoving && (
-                          <div className="flex items-center gap-1 text-emerald-400">
-                            <Navigation className="w-3 h-3" />
-                            <span>Moving</span>
+                      {/* Organic background glow */}
+                      <div className={`absolute -right-4 -bottom-4 w-16 h-16 rounded-full blur-xl opacity-30 ${
+                        member.status === 'safe' ? 'bg-emerald-500' :
+                        member.status === 'warning' ? 'bg-amber-500' :
+                        'bg-red-500'
+                      }`} />
+
+                      <div className="relative p-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`
+                            w-11 h-11 rounded-xl flex items-center justify-center
+                            ${getStatusColor(member.status)} text-white font-bold text-xs
+                            shadow-lg
+                          `}
+                          >
+                            {member.avatar}
                           </div>
-                        )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-semibold text-white">{member.name}</p>
+                              <span className="text-dark-400 text-xs">
+                                {lastSeenText}
+                              </span>
+                            </div>
+                            <p className={`text-sm truncate flex items-center gap-1 ${hasLocation ? 'text-dark-400' : 'text-amber-400'}`}>
+                              {!hasLocation && viewMode === 'live' && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                              )}
+                              <MapPin className="w-3 h-3" />
+                              {locationText}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 mt-3 pt-2 border-t border-dark-700">
+                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg ${
+                            member.battery < 20 ? 'bg-red-500/20 text-red-400' : 'bg-dark-700/50 text-dark-300'
+                          }`}>
+                            <Battery className="w-3 h-3" />
+                            <span className="text-xs font-medium">{member.battery}%</span>
+                          </div>
+                          <div className={`flex items-center gap-1.5 px-2 py-1 rounded-lg ${
+                            member.signal === 0 ? 'bg-red-500/20 text-red-400' : 'bg-dark-700/50 text-dark-300'
+                          }`}>
+                            <Wifi className="w-3 h-3" />
+                            <span className="text-xs font-medium">{member.signal}/4</span>
+                          </div>
+                          {member.isMoving && (
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-400">
+                              <Navigation className="w-3 h-3" />
+                              <span className="text-xs font-medium">Moving</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>

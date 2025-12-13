@@ -81,6 +81,7 @@ export interface ChatState {
   // Actions - Extraction
   setLiveExtraction: (extraction: LiveExtractionState | null) => void;
   updateExtraction: (extraction: ChatExtractionResult) => void;
+  addRecommendedPlace: (place: { name: string; type: string }) => void;
 
   // Actions - User
   setUserName: (name: string) => void;
@@ -247,6 +248,94 @@ export const useChatStore = create<ChatState>()(
                 confidence: 80,
               },
         })),
+
+      addRecommendedPlace: (place) =>
+        set((state) => {
+          // Map recommendation type to extraction type
+          const typeMap: Record<string, 'destination' | 'restaurant' | 'hotel' | 'activity' | 'landmark'> = {
+            place: 'destination',
+            hotel: 'hotel',
+            restaurant: 'restaurant',
+            activity: 'activity',
+          };
+
+          const newPlace = {
+            name: place.name,
+            type: typeMap[place.type] || 'destination',
+            votes: 1,
+            status: 'confirmed' as const,
+            mentionedBy: ['AI Recommendation'],
+            source: 'ai' as const,
+            confidence: 90,
+          };
+
+          // If no extraction exists, create one
+          if (!state.liveExtraction) {
+            return {
+              liveExtraction: {
+                isExtracting: false,
+                lastExtractedAt: new Date(),
+                messagesSinceExtraction: 0,
+                extraction: {
+                  dates: [],
+                  budget: null,
+                  places: [newPlace],
+                  tasks: [],
+                  decisions: [],
+                  openQuestions: [],
+                  stats: {
+                    totalMessages: 0,
+                    relevantMessages: 0,
+                    mediaFiltered: 0,
+                    extractedItems: 1,
+                    processingTimeMs: 0,
+                    providersUsed: [],
+                  },
+                },
+                confidence: 80,
+              },
+            };
+          }
+
+          // If extraction exists, add to places
+          const existingPlaces = state.liveExtraction.extraction?.places || [];
+
+          // Check if place already exists
+          const exists = existingPlaces.some(
+            (p) => p.name.toLowerCase() === place.name.toLowerCase()
+          );
+
+          if (exists) {
+            return state; // Don't add duplicate
+          }
+
+          return {
+            liveExtraction: {
+              ...state.liveExtraction,
+              extraction: state.liveExtraction.extraction
+                ? {
+                    ...state.liveExtraction.extraction,
+                    places: [...existingPlaces, newPlace],
+                  }
+                : {
+                    dates: [],
+                    budget: null,
+                    places: [newPlace],
+                    tasks: [],
+                    decisions: [],
+                    openQuestions: [],
+                    stats: {
+                      totalMessages: 0,
+                      relevantMessages: 0,
+                      mediaFiltered: 0,
+                      extractedItems: 1,
+                      processingTimeMs: 0,
+                      providersUsed: [],
+                    },
+                  },
+            },
+          };
+        }),
 
       // User Actions
       setUserName: (name) => set({ userName: name }),

@@ -11,3 +11,7 @@ export { default as GroupSetupModal } from './GroupSetupModal';
 // Trip-integrated safety components
 export { default as EmergencyPanel } from './EmergencyPanel';
 export { default as SafetyBriefingPanel } from './SafetyBriefingPanel';
+
+// Impact Dashboard Components
+export { ImpactStatCard } from './ImpactStatCard';
+export { SafetyScoreRing } from './SafetyScoreRing';
